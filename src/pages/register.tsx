@@ -9,17 +9,18 @@ import {
     Space,
     Badge,
     message,
+    Tag,
 } from "antd";
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { RootReduxActionType, RootReduxDataType } from "../store/reducer";
 import {
     ChangeIsError,
     ChangeIsReg,
     ChangeIsResult,
     ChangeIsSuccess,
-} from "../store/register/index";
+} from "../store/register";
 
 type loginRespType = {
     error_code: number;
@@ -65,6 +66,10 @@ export default function RegPage() {
                     }
                     dispatch(ChangeIsSuccess(true));
                     message.success("登录成功");
+                })
+                .catch((err) => {
+                    dispatch(ChangeIsError(true));
+                    dispatch(ChangeIsResult("网络错误"));
                 });
         }, 2000);
     }, []);
@@ -145,10 +150,22 @@ export default function RegPage() {
                                         },
                                     ]}
                                 >
-                                    <Input.Password placeholder="请输入用户名"></Input.Password>
+                                    <Input.Password placeholder="请输入用户名" />
                                 </Form.Item>
                                 <Form.Item {...tailLayout}>
                                     <Checkbox children={"记住登录"} />
+                                </Form.Item>
+                                <Form.Item {...tailLayout}>
+                                    <Tag
+                                        style={{
+                                            width: "100%",
+                                            padding: "10px 20px",
+                                        }}
+                                        color={"warning"}
+                                        visible={isError}
+                                    >
+                                        {result}{" "}
+                                    </Tag>
                                 </Form.Item>
                                 <Form.Item {...tailLayout}>
                                     <Button
@@ -160,7 +177,7 @@ export default function RegPage() {
                                     >
                                         {isSuccess ? "已登录" : "登录"}
                                     </Button>
-                                    or <a>去注册</a>
+                                    or <Link to="/login">去注册</Link>
                                 </Form.Item>
                             </Form>
                         </Col>
