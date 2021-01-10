@@ -4,5 +4,3 @@ export type MatchResult<P extends Object = {}> = {
     path: string;
     url: string;
 };
-
-export type Match = {};

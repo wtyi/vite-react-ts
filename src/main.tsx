@@ -4,4 +4,4 @@ import App from "./App";
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
-import "./react-router/react-router-dom/index";
+// import "./react-router/react-router-dom/index";

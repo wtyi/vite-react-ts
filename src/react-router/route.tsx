@@ -1,42 +1,51 @@
 import React, { useContext } from "react";
-import { match, pathToRegexp } from "path-to-regexp";
 import RouterContext from "./router-context";
 import { History } from "history";
+import { computedRouteIsRender } from "./util";
+import { MatchResult } from "./types";
 
 /**
  * 优先级 children > component > render
  */
-type RouteProps = {
+export type RouteProps = {
     path: string;
     exact?: boolean;
     render?: (history: History | null) => React.ReactNode;
     component?: React.ReactNode;
+    computedMath?: MatchResult;
 };
 
-export const Route = (props: React.PropsWithChildren<RouteProps>) => {
-    const { path, exact, render, children, component } = props;
-    const value = useContext(RouterContext);
+export const Route: React.FC<RouteProps> = (props) => {
+    const { path, exact, render, children, component, computedMath } = props;
+    const ctx = useContext(RouterContext);
 
     // 判断是否需要渲染
-    const regExp = pathToRegexp(path);
-    const exec = match(regExp, { decode: decodeURIComponent });
-    const result = exec(value.location?.pathname || "");
+    // 如果computedMath 存在则不用计算了 使用了switch
     // 匹配失败
-    if (!result) {
-        return <div>null</div>;
+    const result = computedRouteIsRender(path, exact, ctx);
+    console.log(computedMath);
+    if (!result.isExact) {
+        return <>{null}</>;
     }
-    // 判断是否精确匹配到
-    if (exact && result.path !== path) {
-        return <div>null</div>;
-    }
-
     // 匹配成功
     const MatchCom: React.ReactNode | null = children
         ? children
         : component
         ? component
         : render
-        ? render(value.history)
+        ? render(ctx.history)
         : null;
-    return { MatchCom };
+
+    // 子组件可能需要获取匹配结果。匹配参数 等等
+
+    return (
+        <RouterContext.Provider
+            value={{
+                ...ctx,
+                match: result,
+            }}
+        >
+            {MatchCom}
+        </RouterContext.Provider>
+    );
 };

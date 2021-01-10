@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { History, Location } from "history";
 import { match } from "path-to-regexp";
 import RouterContext, {
@@ -10,8 +10,8 @@ export type RouterProps = {
     history: History;
 };
 
-export const Router = (props: React.PropsWithChildren<RouterProps>) => {
-    const { history } = props;
+export const Router: React.FC<RouterProps> = (props) => {
+    const { history, children } = props;
     const [location, setLocation] = useState<Location | null>(null);
 
     const value = useMemo<RouterContextValueProps>(() => {
@@ -28,6 +28,8 @@ export const Router = (props: React.PropsWithChildren<RouterProps>) => {
     }, [location]);
 
     useEffect(() => {
+        // 首次渲染
+        setLocation(history.location);
         const unListen = history.listen(({ action, location: newLocation }) => {
             // 当路由变化时 重新设置自己的location 并更改RouterContext value(useMemo)
             // setLocation 运行后 重新执行 这时value useMemo依赖性被改变 重新计算新的 RouterContext value
@@ -39,7 +41,7 @@ export const Router = (props: React.PropsWithChildren<RouterProps>) => {
 
     return (
         <RouterContext.Provider value={value}>
-            <div>123</div>
+            {children}
         </RouterContext.Provider>
     );
 };

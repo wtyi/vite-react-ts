@@ -133,7 +133,7 @@ export default function RegPage() {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder="请输入用户名"></Input>
+                                    <Input placeholder="请输入用户名" />
                                 </Form.Item>
                                 <Form.Item
                                     label="密码"
@@ -183,7 +183,7 @@ export default function RegPage() {
                         </Col>
                     </Row>
                 </Col>
-                <Col span={8} xs={2}></Col>
+                <Col span={8} xs={2} />
             </Row>
         </div>
     );

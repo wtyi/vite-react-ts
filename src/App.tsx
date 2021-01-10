@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+// import {
+//     BrowserRouter as Router,
+//     Route,
+//     Redirect,
+//     Switch,
+// } from "react-router-dom";
+import { Route, BrowserRouter as Router } from "./react-router/index";
 import { Provider } from "react-redux";
 import store from "./store/index";
 import "antd/dist/antd.css";
@@ -13,10 +19,19 @@ export default function App() {
         <Provider store={store}>
             <div className="app">
                 <Router>
-                    <Route path="/login" exact>
+                    <Route path="/" exact>
+                        {/*<Redirect to={"/register"} />*/}
+                    </Route>
+                    <Route path="/login/add">
                         <LoginPage />
                     </Route>
-                    <Route path="/register" exact>
+                    <Route path="/login">
+                        <LoginPage />
+                    </Route>
+                    <Route path="/register/add">
+                        <RegPage />
+                    </Route>
+                    <Route path="/register">
                         <RegPage />
                     </Route>
                     <Route path="/add" exact>
